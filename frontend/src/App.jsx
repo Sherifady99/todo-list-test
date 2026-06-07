@@ -9,15 +9,14 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Filters
   const [filters, setFilters] = useState({
     search: '',
     priority: '',
     category: '',
     complete: '',
+    sort_by: '',
   });
 
-  // Modal
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
 
@@ -38,7 +37,6 @@ export default function App() {
     fetchTasks();
   }, [fetchTasks]);
 
-  // Derive unique categories from loaded tasks (also across filters)
   const [allCategories, setAllCategories] = useState([]);
   useEffect(() => {
     getTasks({}).then(all => {
@@ -70,26 +68,14 @@ export default function App() {
     setTasks(prev => prev.map(t => t.id === task.id ? updated : t));
   };
 
-  const openCreate = () => {
-    setEditingTask(null);
-    setModalOpen(true);
-  };
-
-  const openEdit = (task) => {
-    setEditingTask(task);
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-    setEditingTask(null);
-  };
+  const openCreate = () => { setEditingTask(null); setModalOpen(true); };
+  const openEdit = (task) => { setEditingTask(task); setModalOpen(true); };
+  const closeModal = () => { setModalOpen(false); setEditingTask(null); };
 
   const completedCount = tasks.filter(t => t.is_complete).length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-slate-100">
-      {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-20">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -114,7 +100,6 @@ export default function App() {
         </div>
       </header>
 
-      {/* Main */}
       <main className="max-w-4xl mx-auto px-4 py-6">
         <FilterBar filters={filters} setFilters={setFilters} categories={allCategories} />
 
@@ -139,7 +124,6 @@ export default function App() {
         )}
       </main>
 
-      {/* Modal */}
       {modalOpen && (
         <TaskForm
           task={editingTask}
