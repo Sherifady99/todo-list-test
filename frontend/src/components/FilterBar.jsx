@@ -1,6 +1,5 @@
 import React from 'react';
 
-const PRIORITIES = ['', 'high', 'medium', 'low'];
 const COMPLETE_OPTIONS = [
   { value: '', label: 'All tasks' },
   { value: 'false', label: 'Active' },
@@ -9,8 +8,8 @@ const COMPLETE_OPTIONS = [
 
 export default function FilterBar({ filters, setFilters, categories }) {
   const update = (key, value) => setFilters(prev => ({ ...prev, [key]: value }));
-  const clearAll = () => setFilters({ search: '', priority: '', category: '', complete: '' });
-  const hasFilters = filters.search || filters.priority || filters.category || filters.complete;
+  const clearAll = () => setFilters({ search: '', priority: '', category: '', complete: '', sort_by: '' });
+  const hasFilters = filters.search || filters.priority || filters.category || filters.complete || filters.sort_by;
 
   return (
     <div className="card p-4 mb-5">
@@ -30,11 +29,7 @@ export default function FilterBar({ filters, setFilters, categories }) {
         </div>
 
         {/* Priority filter */}
-        <select
-          value={filters.priority}
-          onChange={e => update('priority', e.target.value)}
-          className="input w-auto min-w-[130px]"
-        >
+        <select value={filters.priority} onChange={e => update('priority', e.target.value)} className="input w-auto min-w-[130px]">
           <option value="">All priorities</option>
           <option value="high">High</option>
           <option value="medium">Medium</option>
@@ -42,18 +37,14 @@ export default function FilterBar({ filters, setFilters, categories }) {
         </select>
 
         {/* Category filter */}
-        <select
-          value={filters.category}
-          onChange={e => update('category', e.target.value)}
-          className="input w-auto min-w-[130px]"
-        >
+        <select value={filters.category} onChange={e => update('category', e.target.value)} className="input w-auto min-w-[130px]">
           <option value="">All categories</option>
           {categories.map(c => (
             <option key={c} value={c}>{c}</option>
           ))}
         </select>
 
-        {/* Complete filter */}
+        {/* Active/Completed toggle */}
         <div className="flex rounded-lg border border-slate-200 overflow-hidden bg-white">
           {COMPLETE_OPTIONS.map(opt => (
             <button
@@ -69,6 +60,13 @@ export default function FilterBar({ filters, setFilters, categories }) {
             </button>
           ))}
         </div>
+
+        {/* Sort */}
+        <select value={filters.sort_by} onChange={e => update('sort_by', e.target.value)} className="input w-auto min-w-[140px]">
+          <option value="">Default order</option>
+          <option value="due_date">Sort: Due Date</option>
+          <option value="priority">Sort: Priority</option>
+        </select>
 
         {/* Clear */}
         {hasFilters && (
