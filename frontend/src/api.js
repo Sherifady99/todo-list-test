@@ -1,4 +1,4 @@
-const BASE = '/api';
+const BASE = 'http://localhost:8000';
 
 async function request(path, options = {}) {
   const res = await fetch(`${BASE}${path}`, {
@@ -6,9 +6,10 @@ async function request(path, options = {}) {
     ...options,
   });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: 'Unknown error' }));
-    throw new Error(err.error || `HTTP ${res.status}`);
+    const err = await res.json().catch(() => ({ detail: 'Unknown error' }));
+    throw new Error(err.detail || err.error || `HTTP ${res.status}`);
   }
+  if (res.status === 204) return null;
   return res.json();
 }
 
