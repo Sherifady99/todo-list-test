@@ -46,7 +46,6 @@ export default function TaskItem({ task, onEdit, onDelete, onToggleComplete }) {
             className={`flex-shrink-0 mt-0.5 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
               task.is_complete ? 'bg-indigo-500 border-indigo-500' : 'border-slate-300 hover:border-indigo-500'
             }`}
-            aria-label={task.is_complete ? 'Mark incomplete' : 'Mark complete'}
           >
             {task.is_complete && (
               <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -55,7 +54,6 @@ export default function TaskItem({ task, onEdit, onDelete, onToggleComplete }) {
             )}
           </button>
 
-          {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
               <button onClick={() => setExpanded(e => !e)} className="text-left flex-1 min-w-0">
@@ -81,6 +79,7 @@ export default function TaskItem({ task, onEdit, onDelete, onToggleComplete }) {
               <p className="mt-1 text-sm text-slate-500 leading-relaxed line-clamp-2">{task.description}</p>
             )}
 
+            {/* Tags row */}
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border ${priority.badge}`}>
                 <span className={`w-1.5 h-1.5 rounded-full ${priority.dot}`} />
@@ -90,6 +89,15 @@ export default function TaskItem({ task, onEdit, onDelete, onToggleComplete }) {
               {task.category && (
                 <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
                   {task.category}
+                </span>
+              )}
+
+              {task.assignee && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-violet-50 text-violet-700 border border-violet-200">
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  {task.assignee}
                 </span>
               )}
 
@@ -119,14 +127,21 @@ export default function TaskItem({ task, onEdit, onDelete, onToggleComplete }) {
                 <svg className={`w-3.5 h-3.5 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
-                {expanded ? 'Hide' : 'Subtasks'}
+                {expanded ? 'Hide' : 'Details'}
               </button>
             </div>
           </div>
         </div>
 
+        {/* Expanded: notes + subtasks */}
         {expanded && (
-          <div className="mt-1 ml-8">
+          <div className="mt-3 ml-8 space-y-3">
+            {task.notes && (
+              <div className="p-3 bg-amber-50 border border-amber-100 rounded-lg">
+                <p className="text-xs font-semibold text-amber-700 mb-1">Notes</p>
+                <p className="text-sm text-amber-900 whitespace-pre-wrap">{task.notes}</p>
+              </div>
+            )}
             <SubtaskList taskId={task.id} />
           </div>
         )}
