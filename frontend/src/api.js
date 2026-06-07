@@ -1,4 +1,4 @@
-const BASE = 'http://localhost:8000';
+const BASE = 'https://todo-list-test-production-1b48.up.railway.app';
 
 async function request(path, options = {}) {
   const res = await fetch(`${BASE}${path}`, {
